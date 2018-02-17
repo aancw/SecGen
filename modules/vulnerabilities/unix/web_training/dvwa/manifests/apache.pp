@@ -3,7 +3,7 @@ class dvwa::apache {
   $port = $secgen_parameters['port'][0]
   $docroot = '/var/www/dvwa'
 
-  package { ['php5', 'mysql-client','php5-mysql']:
+  package { ['php5', 'php5-mysql']:
     ensure => installed,
   }
 
@@ -13,8 +13,16 @@ class dvwa::apache {
     overwrite_ports => false,
   }
 
-  ::apache::vhost { 'onlinestore':
+  ::apache::vhost { 'dvwa':
     port    => $port,
     docroot => $docroot,
   }
+  
+  mysql::db { 'dvwa_database':
+    user     => 'dvwa_user',
+    password => 'dvwa_passREPLACEME',
+    host     => 'localhost',
+    grant    => ['SELECT', 'UPDATE'],
+  }
+
 }

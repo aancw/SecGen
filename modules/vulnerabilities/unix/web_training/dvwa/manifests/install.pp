@@ -22,5 +22,4 @@ class dvwa::install {
 #     notify => File["$docroot/mysql.php"],
   }
 
-
 }
