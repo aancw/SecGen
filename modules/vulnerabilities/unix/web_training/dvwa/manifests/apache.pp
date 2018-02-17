@@ -3,7 +3,7 @@ class dvwa::apache {
   $port = $secgen_parameters['port'][0]
   $docroot = '/var/www/dvwa'
 
-  package { ['php5', 'php5-mysql']:
+  package { ['php5', 'php5-gd', 'php5-mysql']:
     ensure => installed,
   }
 
@@ -22,7 +22,7 @@ class dvwa::apache {
     user     => 'dvwa_user',
     password => 'dvwa_passREPLACEME',
     host     => 'localhost',
-    grant    => ['SELECT', 'UPDATE'],
+    grant    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE'],
   }
 
 }
