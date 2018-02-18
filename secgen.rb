@@ -132,6 +132,7 @@ def build_vms(scenario, project_dir, options)
     command = '--provision reload'
   end
 
+  # if deploying to ovirt, when things fail to build, set the retry_count
   retry_count = (options[:ovirtuser] and options[:ovirtpass]) ? 10 : 0
   successful_creation = false
 
@@ -164,7 +165,7 @@ def build_vms(scenario, project_dir, options)
           failures = failures.uniq
 
           Print.err 'Error creating VMs [' + failures.join(',') + '] destroying VMs and retrying...'
-          if falures.size == 0
+          if failures.size == 0
             Print.err 'Failed but did not determine which VMs; destroying all created VMs...'
             # a space means destroy all
             failures << ' '
