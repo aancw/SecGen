@@ -157,11 +157,13 @@ def build_vms(scenario, project_dir, options)
           split.each do |line|
             if line =~ /^([-a-zA-Z_0-9]+): Error:|^([-a-zA-Z_0-9]+): An error occurred/i
               vm_to_destroy = $1
+              Print.debug "vm_to_destroy: #{vm_to_destroy}"
               failures_to_destroy << vm_to_destroy
               Print.debug "error failures_to_destroy: #{line}"
               Print.debug failures_to_destroy.to_s
             elsif line =~ /^([-a-zA-Z_0-9]+): VM is not created:|/i
               vm_not_to_destroy = $1
+              Print.debug "vm_not_to_destroy: #{vm_not_to_destroy}"
               failures_to_destroy.delete_if {|x| x == vm_not_to_destroy }
               Print.debug "no vm failures_to_destroy: "
               Print.debug failures_to_destroy.to_s
@@ -172,7 +174,7 @@ def build_vms(scenario, project_dir, options)
           failures_to_destroy = failures_to_destroy.uniq
 
           if failures_to_destroy.size == 0
-            Print.err 'Failed but could not determine which VMs failed... Not retrying.'
+            Print.err 'Failed but could not determine which VMs failed. Not retrying.'
             exit 1
           end
           Print.err 'Error creating VMs [' + failures_to_destroy.join(',') + '] destroying VMs and retrying...'
