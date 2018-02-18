@@ -156,14 +156,14 @@ def build_vms(scenario, project_dir, options)
           failures_to_destroy = []
           split.each do |line|
             Print.debug "line:#{line}"
-            if line =~ /^([-a-zA-Z_0-9]+): Error:.*|^([-a-zA-Z_0-9]+): An error occurred.*/i
-              vm_to_destroy = $1
+            if match = line.match(/^([-a-zA-Z_0-9]+): Error:.*|^([-a-zA-Z_0-9]+): An error occured.*/i)
+              vm_to_destroy = match.captures[0]
               Print.debug "vm_to_destroy: #{vm_to_destroy}"
               failures_to_destroy << vm_to_destroy
               Print.debug "error failures_to_destroy: #{line}"
               Print.debug failures_to_destroy.to_s
-            elsif line =~ /^([-a-zA-Z_0-9]+): VM is not created:.*/i
-              vm_not_to_destroy = $1
+            elsif match = line.match(/^([-a-zA-Z_0-9]+): VM is not created:.*/i)
+              vm_not_to_destroy = match.captures[0]
               Print.debug "vm_not_to_destroy: #{vm_not_to_destroy}"
               failures_to_destroy.delete_if {|x| x == vm_not_to_destroy }
               Print.debug "no vm failures_to_destroy: "
