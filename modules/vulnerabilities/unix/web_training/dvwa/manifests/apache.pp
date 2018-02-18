@@ -30,4 +30,10 @@ class dvwa::apache {
     password_hash => mysql_password('dvwa_passREPLACEME')
   }
   
+  mysql_grant{'dvwa_user@localhost/dvwa_database.*':
+    user       => 'dvwa_user@localhost',
+    table      => 'dvwa_database.*',
+    privileges => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'],
+  }
+
 }
