@@ -158,11 +158,11 @@ def build_vms(scenario, project_dir, options)
             if match = line.match(/^([-a-zA-Z_0-9]+): Error:|([-a-zA-Z_0-9]+): An error occurred:|/i)
               failures_to_destroy << match.captures
               Print.debug "error failures_to_destroy: "
-              Print.debug failures_to_destroy
+              Print.debug failures_to_destroy.to_s
             elsif match = line.match(/^([-a-zA-Z_0-9]+): VM is not created:|/i)
               failures_to_destroy = failures_to_destroy - match.captures
               Print.debug "no vm failures_to_destroy: "
-              Print.debug failures_to_destroy
+              Print.debug failures_to_destroy.to_s
               
             end
             
