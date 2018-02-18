@@ -155,12 +155,14 @@ def build_vms(scenario, project_dir, options)
           split = vagrant_output[:output].split('==> ')
           failures_to_destroy = []
           split.each do |line|
-            if match = line.match(/^([-a-zA-Z_0-9]+): Error:|([-a-zA-Z_0-9]+): An error occurred:|/i)
-              failures_to_destroy << match.captures
-              Print.debug "error failures_to_destroy: "
+            if line =~ /^([-a-zA-Z_0-9]+): Error:|^([-a-zA-Z_0-9]+): An error occurred:/i
+              vm_to_destroy = $1
+              failures_to_destroy << vm_to_destroy
+              Print.debug "error failures_to_destroy: #{line}"
               Print.debug failures_to_destroy.to_s
-            elsif match = line.match(/^([-a-zA-Z_0-9]+): VM is not created:|/i)
-              failures_to_destroy.delete_if {|x| x == match.captures[0] }
+            elsif line =~ /^([-a-zA-Z_0-9]+): VM is not created:|/i
+              vm_not_to_destroy = $1
+              failures_to_destroy.delete_if {|x| x == vm_not_to_destroy }
               Print.debug "no vm failures_to_destroy: "
               Print.debug failures_to_destroy.to_s
               
