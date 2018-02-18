@@ -24,11 +24,11 @@ class dvwa::apache {
     host     => 'localhost',
     grant    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'],
   }
-
+/*
   mysql_user{ 'dvwa_user@localhost':
     ensure        => present,
     password_hash => mysql_password('dvwa_passREPLACEME')
-  }
+  }*/
   
   mysql_grant{'dvwa_user@localhost/dvwa_database.*':
     user       => 'dvwa_user@localhost',

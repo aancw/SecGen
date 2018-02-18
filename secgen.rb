@@ -157,11 +157,18 @@ def build_vms(scenario, project_dir, options)
             if line.include? ': An error occurred'
               failed_vm = line.split(':').first
               failures << failed_vm
+            elsif match = line.match(/==> ([a-zA-Z_0-9]+): Error: /)
+              failures << match.captures
             end
           end
           failures = failures.uniq
 
           Print.err 'Error creating VMs [' + failures.join(',') + '] destroying VMs and retrying...'
+          if falures.size == 0
+            Print.err 'Failed but did not determine which VMs; destroying all created VMs...'
+            # a space means destroy all
+            failures << ' '
+          end
           failures.each do |failed_vm|
             destroy = 'destroy ' + failed_vm + ' -f'
             destroy_output = GemExec.exe('vagrant', project_dir, destroy)
