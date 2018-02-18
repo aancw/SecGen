@@ -152,25 +152,29 @@ def build_vms(scenario, project_dir, options)
       if retry_count > 0
         # Identify which VMs failed
         if vagrant_output[:exception].class == ProcessHelper::UnexpectedExitStatusError
-          split = vagrant_output[:output].split('==>')
-          failures = []
+          split = vagrant_output[:output].split('==> ')
+          failures_to_destroy = []
           split.each do |line|
-            if line.include? ': An error occurred'
-              failed_vm = line.split(':').first
-              failures << failed_vm
-            elsif match = line.match(/==> ([a-zA-Z_0-9]+): Error: /)
-              failures << match.captures
+            if match = line.match(/^([-a-zA-Z_0-9]+): Error:|([-a-zA-Z_0-9]+): An error occurred:|/i)
+              failures_to_destroy << match.captures
+              Print.debug "error failures_to_destroy: "
+              Print.debug failures_to_destroy
+            elsif match = line.match(/^([-a-zA-Z_0-9]+): VM is not created:|/i)
+              failures_to_destroy = failures_to_destroy - match.captures
+              Print.debug "no vm failures_to_destroy: "
+              Print.debug failures_to_destroy
+              
             end
+            
           end
-          failures = failures.uniq
+          failures_to_destroy = failures_to_destroy.uniq
 
-          Print.err 'Error creating VMs [' + failures.join(',') + '] destroying VMs and retrying...'
-          if failures.size == 0
-            Print.err 'Failed but did not determine which VMs; destroying all created VMs...'
-            # a space means destroy all
-            failures << ' '
+          if failures_to_destroy.size == 0
+            Print.err 'Failed but could not determine which VMs failed... Not retrying.'
+            exit 1
           end
-          failures.each do |failed_vm|
+          Print.err 'Error creating VMs [' + failures_to_destroy.join(',') + '] destroying VMs and retrying...'
+          failures_to_destroy.each do |failed_vm|
             destroy = 'destroy ' + failed_vm + ' -f'
             destroy_output = GemExec.exe('vagrant', project_dir, destroy)
             if destroy_output[:status] == 0
