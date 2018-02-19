@@ -155,7 +155,6 @@ def build_vms(scenario, project_dir, options)
           split = vagrant_output[:output].split('==> ')
           failures_to_destroy = []
           split.each do |line|
-            Print.debug "line:#{line}"
             if match = line.match(/^([-a-zA-Z_0-9]+):[^:]+An error occured/i)
               vm_to_destroy = match.captures[0]
               failures_to_destroy << vm_to_destroy
@@ -166,6 +165,7 @@ def build_vms(scenario, project_dir, options)
               vm_not_to_destroy = match.captures[0]
               Print.err "Not going to destroy #{vm_not_to_destroy}, since it does not exist"
               failures_to_destroy.delete_if {|x| x == vm_not_to_destroy }
+              # TODO: not sure if there is a need to remove_uncreated_vms() here too? (I don't think so?)
             end
           end
           
