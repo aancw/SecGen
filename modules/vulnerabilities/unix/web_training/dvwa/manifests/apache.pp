@@ -33,7 +33,7 @@ class dvwa::apache {
   mysql_grant{'dvwa_user@localhost/dvwa_database.*':
     user       => 'dvwa_user@localhost',
     table      => 'dvwa_database.*',
-    privileges => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'],
+    privileges => ['ALL'],
   }
 
 }
