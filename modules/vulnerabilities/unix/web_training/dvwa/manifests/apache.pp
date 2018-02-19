@@ -18,17 +18,17 @@ class dvwa::apache {
     docroot => $docroot,
   }
   
-  mysql::db { 'dvwa_database':
-    user     => 'dvwa_user',
-    password => 'dvwa_passREPLACEME',
-    host     => 'localhost',
-    grant    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'],
-  }
-/*
+#   mysql::db { 'dvwa_database':
+#     user     => 'dvwa_user',
+#     password => 'dvwa_passREPLACEME',
+#     host     => 'localhost',
+#     grant    => ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'],
+#   }
+
   mysql_user{ 'dvwa_user@localhost':
     ensure        => present,
     password_hash => mysql_password('dvwa_passREPLACEME')
-  }*/
+  }
   
   mysql_grant{'dvwa_user@localhost/dvwa_database.*':
     user       => 'dvwa_user@localhost',
